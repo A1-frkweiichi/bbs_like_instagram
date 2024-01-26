@@ -1,9 +1,17 @@
 <%= simple_form_for post do |f| %>
   <%= f.error_notification %>
 
+  <%= f.input :image, as: :file, label: 'Image' %>
+  <% if post.image? %>
+    <div>
+      <strong>Current Image:</strong>
+      <%= image_tag post.image.url %>
+    </div>
+  <% end %>
+
   <%= f.input :body, label: 'Body', as: :text %>
 
-  <%= f.input :tags, label: 'Tags' %>
+  <%= f.input :tags, label: 'Tags', input_html: { value: post.tags.map(&:name).join(', ') }, as: :string %>
 
   <%= f.button :submit %>
 <% end %>

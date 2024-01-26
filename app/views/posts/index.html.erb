@@ -5,14 +5,11 @@
 <div id="posts">
   <% @posts.each do |post| %>
     <div>
+      <%= image_tag post.image.url, width: "100px" %>
+
       <h3><%= link_to post.body, post %></h3>
 
-      <p>
-        <strong>Tags:</strong>
-        <%= post.tags.map(&:name).join(", ") %>
-      </p>
-
-      <%= link_to "Show this post", post %>
+      <p><%= post.tags.map(&:name).join(", ") %></p>
     </div>
   <% end %>
 </div>

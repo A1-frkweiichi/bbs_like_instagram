@@ -41,6 +41,13 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1 or /posts/1.json
   def update
+    tags = params[:post][:tags].split(',').map(&:strip)
+    @post.tags.clear
+    tags.each do |tag_name|
+      tag = Tag.find_or_create_by(name: tag_name)
+      @post.tags << tag
+    end
+
     respond_to do |format|
       if @post.update(post_params)
         format.html { redirect_to post_url(@post), notice: "Post was successfully updated." }
@@ -70,6 +77,6 @@ class PostsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def post_params
-      params.require(:post).permit(:body)
+      params.require(:post).permit(:body, :image, :tags)
     end
 end
