@@ -1,6 +1,14 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @post %>
+<p>
+  <strong>Body:</strong>
+  <%= @post.body %>
+</p>
+
+<p>
+  <strong>Tags:</strong>
+  <%= @post.tags.map(&:name).join(", ") %>
+</p>
 
 <div>
   <%= link_to "Edit this post", edit_post_path(@post) %> |

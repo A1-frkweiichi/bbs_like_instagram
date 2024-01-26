@@ -4,10 +4,16 @@
 
 <div id="posts">
   <% @posts.each do |post| %>
-    <%= render post %>
-    <p>
+    <div>
+      <h3><%= link_to post.body, post %></h3>
+
+      <p>
+        <strong>Tags:</strong>
+        <%= post.tags.map(&:name).join(", ") %>
+      </p>
+
       <%= link_to "Show this post", post %>
-    </p>
+    </div>
   <% end %>
 </div>
 
