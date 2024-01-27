@@ -2,6 +2,11 @@
 
 <h1>Posts</h1>
 
+<%= simple_form_for @q, url: posts_path, method: :get do |f| %>
+  <%= f.input :tags_name_cont, label: 'Search by Tag' %>
+  <%= f.button :submit, 'Search' %>
+<% end %>
+
 <div id="posts">
   <% @posts.each do |post| %>
     <div>

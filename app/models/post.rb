@@ -6,4 +6,12 @@ class Post < ApplicationRecord
   validates :image, presence: true
 
   mount_uploader :image, ImageUploader
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["tags"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["tags"]
+  end
 end
