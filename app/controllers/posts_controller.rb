@@ -22,8 +22,9 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
-    @post = Post.new(post_params)
-    tags = params[:post][:tags].split(',').map(&:strip)
+    @post = Post.new(post_params.except(:tags))
+    tags_str = post_params[:tags]
+    tags = tags_str.split(',').map(&:strip)
     tags.each do |tag_name|
       tag = Tag.find_or_create_by(name: tag_name)
       @post.tags << tag
@@ -42,7 +43,9 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1 or /posts/1.json
   def update
-    tags = params[:post][:tags].split(',').map(&:strip)
+    updated_params = post_params.except(:tags)
+    tags_str = post_params[:tags]
+    tags = tags_str.split(',').map(&:strip)
     @post.tags.clear
     tags.each do |tag_name|
       tag = Tag.find_or_create_by(name: tag_name)
@@ -50,7 +53,7 @@ class PostsController < ApplicationController
     end
 
     respond_to do |format|
-      if @post.update(post_params)
+      if @post.update(updated_params)
         format.html { redirect_to post_url(@post), notice: "Post was successfully updated." }
         format.json { render :show, status: :ok, location: @post }
       else
