@@ -1,10 +1,12 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, only: %i[new create edit update destroy]
+  before_action :check_user, only: %i[edit update destroy]
 
   # GET /posts or /posts.json
   def index
     @q = Post.ransack(params[:q])
-    @posts = @q.result.includes(:tags)
+    @posts = @q.result.includes(:tags, :user)
   end
 
   # GET /posts/1 or /posts/1.json
@@ -13,7 +15,7 @@ class PostsController < ApplicationController
 
   # GET /posts/new
   def new
-    @post = Post.new
+    @post = current_user.posts.new
   end
 
   # GET /posts/1/edit
@@ -22,7 +24,7 @@ class PostsController < ApplicationController
 
   # POST /posts or /posts.json
   def create
-    @post = Post.new(post_params.except(:tags))
+    @post = current_user.posts.new(post_params.except(:tags))
     tags_str = post_params[:tags]
     tags = tags_str.split(',').map(&:strip)
     tags.each do |tag_name|
@@ -82,5 +84,9 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:body, :image, :tags)
+    end
+
+    def check_user
+      redirect_to(root_url, alert: "You are not authorized to do this action.") unless @post.user == current_user
     end
 end
