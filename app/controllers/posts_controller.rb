@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
   before_action :authenticate_user!, only: %i[new create edit update destroy]
-  before_action :check_user, only: %i[edit update destroy]
+  load_and_authorize_resource
+  skip_load_and_authorize_resource only: [:create, :update]
 
   # GET /posts or /posts.json
   def index
@@ -84,9 +85,5 @@ class PostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def post_params
       params.require(:post).permit(:body, :image, :tags)
-    end
-
-    def check_user
-      redirect_to(root_url, alert: "You are not authorized to do this action.") unless @post.user == current_user
     end
 end
